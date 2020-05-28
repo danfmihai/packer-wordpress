@@ -1,0 +1,22 @@
+{
+    "builders": [{
+        "type": "amazon-ebs",
+        "region": "us-east-1",
+        "instance_type": "t2.micro",
+        "ssh_username": "ec2-user",
+        "ami_name": "packer-wordpress-{{timstamp}}"
+    }],
+
+    "provisioners": [{
+        "type": "shell",
+        "inline": [
+            "sudo yum update -y",
+            "sudo yum install -y httpd mariadb mariadb-server php php-common php-mysql php-gd php-xml php-mbstring php-mcrypt php-xmlrpc unzip wget",
+            "sudo systemctl start httpd",
+            "sudo systemctl start mariadb",
+            "sudo systemctl enable httpd",
+            "sudo systemctl enable mariadb"
+
+        ]
+    }]
+}
