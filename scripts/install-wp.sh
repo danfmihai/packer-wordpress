@@ -1,5 +1,5 @@
 #!/bin/bash
-
+            sleep 30
             #sudo yum update -y
             sudo yum install -y httpd mariadb mariadb-server php php-common php-mysql php-gd php-xml php-mbstring php-mcrypt php-xmlrpc unzip wget
             sudo systemctl start httpd

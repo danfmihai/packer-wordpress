@@ -10,7 +10,6 @@
 
     "provisioners": [{
         "type": "shell",
-        "inline": ["sleep 30"],
         "script": "scripts/install-wp.sh"
     }]
 }
