@@ -1,4 +1,5 @@
 #!/bin/bash
+            clear
             sleep 30
             #sudo yum update -y
             sudo yum install -y httpd mariadb mariadb-server php php-common php-mysql php-gd php-xml php-mbstring php-mcrypt php-xmlrpc unzip wget
@@ -16,6 +17,7 @@
             echo
             echo "Installing Wordpress..."
             echo
+            cd ~
             sudo wget http://wordpress.org/latest.tar.gz
             sudo tar -xzvf latest.tar.gz
             sudo rm -rf wordpress*
@@ -28,4 +30,3 @@
             sed -e "s/database_name_here/"wordpress"/" -e "s/username_here/"wp_user"/" -e "s/password_here/"wordpress"/" wp-config-sample.php > wp-config.php
             echo "Please verify your install and go to http://your-ip"
             echo
-exit
