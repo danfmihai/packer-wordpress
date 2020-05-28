@@ -8,7 +8,7 @@
             sudo systemctl enable httpd
             sudo systemctl enable mariadb
             #echo "<h1>This is the default website</h1>" > /var/www/html/index.html
-            mysql -u root -e "CREATE DATABASE wordpress;"
+            mysql -u root -e "CREATE DATABASE IF NOT EXISTS wordpress;"
             mysql -u root -e "GRANT ALL PRIVILEGES on wordpress.* to 'wp_user'@'localhost' identified by 'wordpress';"
             mysql -u root -e "FLUSH PRIVILEGES;"
             mysql -u root -e "show databases;" 
@@ -20,8 +20,6 @@
             cd ~
             sudo wget http://wordpress.org/latest.tar.gz
             sudo tar -xzvf latest.tar.gz
-            sudo rm -rf wordpress*
-            sudo rm -rf latest*
             sudo cp -avr wordpress/* /var/www/html/
             sudo mkdir /var/www/html/wp-content/uploads
             sudo chown -R apache:apache /var/www/html/
@@ -29,4 +27,7 @@
             cd /var/www/html/
             sed -e "s/database_name_here/"wordpress"/" -e "s/username_here/"wp_user"/" -e "s/password_here/"wordpress"/" wp-config-sample.php > wp-config.php
             echo "Please verify your install and go to http://your-ip"
+            cd ~
+            sudo rm -rf wordpress*
+            sudo rm -rf latest*
             echo
