@@ -7,12 +7,19 @@ dbpass='wordpress'
             clear
             #sleep 30
             #sudo yum update -y
-            sudo yum install -y httpd mariadb mariadb-server php php-common php-mysql php-gd php-xml php-mbstring php-mcrypt php-xmlrpc unzip wget
+            sudo yum install -y httpd mariadb mariadb-server unzip wget
+            # install php 7
+            sudo yum install epel-release yum-utils -y
+            sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+            sudo yum-config-manager --enable remi-php73
+            sudo yum install -y php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysqlnd php-common php-mysql php-gd php-xml php-mbstring php-xmlrpc
+           # Start and enable boot startup for httpd and mysql
             sudo systemctl start httpd
             sudo systemctl start mariadb
             sudo systemctl enable httpd
             sudo systemctl enable mariadb
-            #echo "<h1>This is the default website</h1>" > /var/www/html/index.html
+            
+            # Create database
             mysql -u root -e "CREATE DATABASE IF NOT EXISTS $dbname;"
             mysql -u root -e "GRANT ALL PRIVILEGES on ${dbname}.* to '${dbuser}'@'localhost' identified by '${dbpass}';"
             mysql -u root -e "FLUSH PRIVILEGES;"
@@ -23,7 +30,9 @@ dbpass='wordpress'
             echo "Installing Wordpress..."
             echo
             cd ~
-            sudo wget http://wordpress.org/latest.tar.gz
+           if [ ! -f latest.tar.gz ]; then
+                sudo wget http://wordpress.org/latest.tar.gz
+            fi    
             sudo tar -xzf latest.tar.gz
             sudo cp -ar wordpress/* /var/www/html/
             sudo mkdir -p /var/www/html/wp-content/uploads
