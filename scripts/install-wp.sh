@@ -34,7 +34,7 @@ dbpass='wordpress'
 
             cd /var/www/html/
             
-            cat << EOF> /var/www/html/wp-config.php
+            cat << EOF > /var/www/html/wp-config.php
             <?php
 /**
  * The base configuration for WordPress
@@ -127,11 +127,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once ABSPATH . 'wp-settings.php';
 EOF
 
+cat << EOF > /etc/httpd/conf.d/wordpress.conf
+<VirtualHost *:80>
+    DocumentRoot "/var/www/html"
+   
+
+    DirectoryIndex index.html index.php
+    <Directory /var/www/html>
+      Options FollowSymLinks
+      AllowOverride All
+      Require all granted
+  </Directory>
+    # Other directives here
+</VirtualHost>
+
+EOF
+
+
             echo "Please verify your install and go to http://your-ip"
             
             cd ~
-            #sudo rm -rf wordpress*
-            #sudo rm -rf latest*
-            echo "DBNAME ${dbname}"
-            echo "DBUSER ${dbuser}"
+            sudo rm -rf wordpress*
+            sudo rm -rf latest*
+            #echo "DBNAME ${dbname}"
+            #echo "DBUSER ${dbuser}"
+            sudo systemctl restart httpd.service 
+            
             exit
