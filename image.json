@@ -3,13 +3,27 @@
         "type": "amazon-ebs",
         "region": "us-east-1",
         "instance_type": "t2.micro",
-        "source_ami": "ami-0323c3dd2da7fb37d",
+        "source_ami": "ami-098f16afa9edf40be",
         "ssh_username": "ec2-user",
         "ami_name": "packer-wordpress-{{timestamp}}"
     }],
 
     "provisioners": [{
         "type": "shell",
-        "script": "scripts/install-wp.sh"
+        "inline": [
+            "sleep 30",
+            "sudo dnf install -y php-mysqlnd php-fpm mariadb-server httpd",
+            "sudo dnf install -y unzip wget",
+            "sudo dnf install -y php php-common php-opcache php-cli php-gd php-curl php-mysqlnd php-gd php-xml php-mbstring php-xmlrpc",
+            "echo \"<?php phpinfo(); ?>\" > /var/www/html/phpinfo.php",
+            "sudo chown -R apache:apache /var/www/html/*",
+            "sudo chcon -t httpd_sys_rw_content_t /var/www/html/ -R",
+            "sudo systemctl start httpd",
+            "sudo systemctl start mariadb",
+            "sudo systemctl enable httpd",
+            "sudo systemctl enable mariadb",
+            "echo",
+            "echo \"Database setup done!\""
+        ]
     }]
 }

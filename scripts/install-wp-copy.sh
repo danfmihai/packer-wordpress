@@ -1,41 +1,42 @@
 #!/bin/bash
-  set -x
+set -x
+#vars
+    dbname='wordpress'
+    dbuser='wp_user'
+    dbpass='wordpress'
+            
             sleep 10
             #sudo yum update -y
-            sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2
-            sudo yum install -y unzip wget
-            sudo yum install -y php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysqlnd php-common php-mysql php-gd php-xml php-mbstring php-xmlrpc
-            sudo yum install -y httpd mariadb-server
+            sudo yum install -y httpd mariadb mariadb-server unzip wget
+            # install php 7
+            sudo yum install epel-release yum-utils -y
+            sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+            sudo yum-config-manager --enable remi-php73
+            sudo yum install -y php php-common php-opcache php-cli php-gd php-curl php-mysqlnd php-xml php-mbstring php-xmlrpc
            # Start and enable boot startup for httpd and mysql
-            usermod -a -G apache ec2-user
-            chown -R ec2-user:apache /var/www
-            chmod 2775 /var/www
-            find /var/www -type d -exec chmod 2775 {} \;
-            find /var/www -type f -exec chmod 0664 {} \;
-            echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
             sudo systemctl start httpd
             sudo systemctl start mariadb
             sudo systemctl enable httpd
             sudo systemctl enable mariadb
             
             # Create database
-            sudo mysql -u root -e "CREATE DATABASE IF NOT EXISTS $dbname;"
-            sudo mysql -u root -e "GRANT ALL PRIVILEGES on ${dbname}.* to '${dbuser}'@'localhost' identified by '${dbpass}';"
-            sudo mysql -u root -e "FLUSH PRIVILEGES;"
-            sudo mysql -u root -e "show databases;" 
+            mysql -u root -e "CREATE DATABASE IF NOT EXISTS $dbname;"
+            mysql -u root -e "GRANT ALL PRIVILEGES on ${dbname}.* to '${dbuser}'@'localhost' identified by '${dbpass}';"
+            mysql -u root -e "FLUSH PRIVILEGES;"
+            mysql -u root -e "show databases;" 
             echo
             echo "Database setup done!"
             echo
             echo "Installing Wordpress..."
             echo
             cd ~
-           if [ ! -f latest.tar.gz ]; then
+            if [ ! -f latest.tar.gz ]; then
                 sudo wget http://wordpress.org/latest.tar.gz
             fi    
             sudo tar -xzf latest.tar.gz
             sudo cp -ar wordpress/* /var/www/html/
             sudo mkdir -p /var/www/html/wp-content/uploads
-            sudo touch /var/www/html/wp-config.php
+            sudo touch wp-config.php
             sudo chown -R apache:apache /var/www/html/
             sudo chmod -R 755 /var/www/html/
             #sudo cp -av  wp-config-sample.php wp-config.php
@@ -161,4 +162,4 @@ EOF
             #echo "DBUSER ${dbuser}"
             sudo systemctl restart httpd.service 
             php -v
-exit 0
+            exit
