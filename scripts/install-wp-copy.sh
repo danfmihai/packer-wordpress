@@ -1,9 +1,10 @@
 #!/bin/bash
 #set -x
 #vars
-    dbname='wordpress'
-    dbuser='wp_user'
-    dbpass='wordpress'
+        sed -i 's/\(SELINUX=\)\(.*\)/\1permissive/' /etc/selinux/config
+        dbname='wordpress'
+        dbuser='wp_user'
+        dbpass='wordpress'
             #sudo dnf update `  w1q1y76tu58-y
             
             sudo dnf install -y httpd mariadb mariadb-server unzip wget nano bash-completion yum-utils
@@ -160,7 +161,7 @@ EOF
             cd ~
             sudo rm -rfv wordpress*
             sudo rm -rfv latest*
-            sed -i 's/^SELINUX= .*$/SELINUX=permissive/' /etc/selinux/config
+            
             getenforce
             php -v
             echo
