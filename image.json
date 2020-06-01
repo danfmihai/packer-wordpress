@@ -12,7 +12,7 @@
         "type": "shell",
         "execute_command": "sudo -S bash '{{.Path}}'",
         "scripts": [
-            "scripts/install-wp-copy.sh"
+            "scripts/install-wp.sh"
         ]
 
     }]
