@@ -10,20 +10,10 @@
 
     "provisioners": [{
         "type": "shell",
-        "inline": [
-            "sleep 30",
-            "sudo dnf install -y php-mysqlnd php-fpm mariadb-server httpd",
-            "sudo dnf install -y unzip wget",
-            "sudo dnf install -y php php-common php-opcache php-cli php-gd php-curl php-mysqlnd php-gd php-xml php-mbstring php-xmlrpc",
-            "echo \"<?php phpinfo(); ?>\" > /var/www/html/phpinfo.php",
-            "sudo chown -R apache:apache /var/www/html/*",
-            "sudo chcon -t httpd_sys_rw_content_t /var/www/html/ -R",
-            "sudo systemctl start httpd",
-            "sudo systemctl start mariadb",
-            "sudo systemctl enable httpd",
-            "sudo systemctl enable mariadb",
-            "echo",
-            "echo \"Database setup done!\""
+        "execute_command": "sudo -S bash '{{.Path}}'",
+        "scripts": [
+            "scripts/install-wp-copy.sh"
         ]
+
     }]
 }
