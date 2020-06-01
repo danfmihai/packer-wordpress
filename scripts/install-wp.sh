@@ -36,7 +36,7 @@
                 sudo wget http://wordpress.org/latest.tar.gz
             fi    
             sudo tar -xzf latest.tar.gz
-            sudo mkdir -p /var/www/html/wp/wp-content/uploads
+            sudo mkdir -p /var/www/html/wp/
             sudo cp -ar wordpress/* /var/www/html/wp/
                         
             sudo chown -R apache:apache /var/www/html/
