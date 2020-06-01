@@ -1,19 +1,18 @@
 #!/bin/bash
-set -x
+#set -x
 #vars
     dbname='wordpress'
     dbuser='wp_user'
     dbpass='wordpress'
+            #sudo dnf update `  w1q1y76tu58-y
             
-            sleep 10
-            #sudo yum update -y
-            sudo yum install -y httpd mariadb mariadb-server unzip wget
+            sudo dnf install -y httpd mariadb mariadb-server unzip wget nano bash-completion yum-utils
             # install php 7
-            sudo yum install epel-release yum-utils -y
-            sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-            sudo yum-config-manager --enable remi-php73
-            sudo yum install -y php php-common php-opcache php-cli php-gd php-curl php-mysqlnd php-xml php-mbstring php-xmlrpc
+            #sudo dnf install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+            #sudo dnf-config-manager --enable remi-php73
+            sudo dnf install -y php php-common php-opcache php-cli php-gd php-curl php-mysqlnd php-xml php-mbstring php-xmlrpc
            # Start and enable boot startup for httpd and mysql
+            sudo usermod -a -G apache ec2-user
             sudo systemctl start httpd
             sudo systemctl start mariadb
             sudo systemctl enable httpd
@@ -44,7 +43,7 @@ set -x
             cd /var/www/html/
             
             sudo cat << EOF > /var/www/html/wp-config.php
-            <?php
+ <?php
 /**
  * The base configuration for WordPress
  *
@@ -66,13 +65,13 @@ set -x
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', '${dbname}' );
+define( 'DB_NAME', 'wordpress' );
 
 /** MySQL database username */
-define( 'DB_USER', '${dbuser}' );
+define( 'DB_USER', 'wp_user' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', '${dbpass}' );
+define( 'DB_PASSWORD', 'wordpress' );
 
 /** MySQL hostname */
 define( 'DB_HOST', 'localhost' );
@@ -155,11 +154,14 @@ EOF
 
             echo "Please verify your install and go to http://your-ip"
             
+            sudo chown -R apache:apache /var/www/html/
+            sudo chmod -R 755 /var/www/html/
+            
             cd ~
-            sudo rm -rf wordpress*
-            sudo rm -rf latest*
-            #echo "DBNAME ${dbname}"
-            #echo "DBUSER ${dbuser}"
-            sudo systemctl restart httpd.service 
+            sudo rm -rfv wordpress*
+            sudo rm -rfv latest*
+             
             php -v
-            exit
+            echo
+            echo "Finished provisioning!"
+            exit 0

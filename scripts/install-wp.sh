@@ -1,5 +1,5 @@
 #!/bin/bash
-  set -x
+  #set -x
             sleep 10
             #sudo yum update -y
             sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2
@@ -8,11 +8,12 @@
             sudo yum install -y httpd mariadb-server
            # Start and enable boot startup for httpd and mysql
             usermod -a -G apache ec2-user
+            echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
             chown -R ec2-user:apache /var/www
             chmod 2775 /var/www
             find /var/www -type d -exec chmod 2775 {} \;
             find /var/www -type f -exec chmod 0664 {} \;
-            echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
+            
             sudo systemctl start httpd
             sudo systemctl start mariadb
             sudo systemctl enable httpd
