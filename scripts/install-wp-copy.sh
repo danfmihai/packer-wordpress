@@ -160,7 +160,8 @@ EOF
             cd ~
             sudo rm -rfv wordpress*
             sudo rm -rfv latest*
-             
+            sed -i 's/^SELINUX= .*$/SELINUX=permissive/' /etc/selinux/config
+            getenforce
             php -v
             echo
             echo "Finished provisioning!"
